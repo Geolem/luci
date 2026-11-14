@@ -9,8 +9,8 @@
 return baseclass.extend({
 	title: _('OLSRd'),
 
-	rrdargs: function(graph, host, plugin, plugin_instance, dtype) {
-		var g = [];
+	rrdargs(graph, host, plugin, plugin_instance, dtype) {
+		const g = [];
 
 		if (plugin_instance == "routes") {
 			g.push({
@@ -75,21 +75,22 @@ return baseclass.extend({
 				}
 			});
 
-			var instances = graph.dataInstances(host, plugin, plugin_instance, "signal_quality").sort();
+			const instances = graph.dataInstances(host, plugin, plugin_instance, "signal_quality").sort();
 
 			/* define one diagram per host, containing the rx and lq values */
-			for (var i = 0; i < instances.length; i += 2) {
-				var dsn1 = "signal_quality_%s_value".format(instances[i].replace(/\W+/g, '_')),
-				    dsn2 = "signal_quality_%s_value".format(instances[i+1].replace(/\W+/g, '_')),
-				    host = instances[i].match(/^[^-]+-([^-]+)-.+$/),
-				    host = host ? host[1] : 'avg',
-				    opts = {};
+			for (let i = 0; i < instances.length; i += 2) {
+				const dsn1 = "signal_quality_%s_value".format(instances[i].replace(/\W+/g, '_'));
+				const dsn2 = "signal_quality_%s_value".format(instances[i+1].replace(/\W+/g, '_'));
+				let host = instances[i].match(/^[^-]+-([^-]+)-.+$/);
+				host = host ? host[1] : 'avg';
+				const opts = {};
 
 				opts[dsn1] = { color: "00ff00", title: "LQ (%s)".format(host) };
-				opts[dns2] = { color: "0000ff", title: "NLQ (%s)".format(host), flip: true };
+				opts[dsn2] = { color: "0000ff", title: "NLQ (%s)".format(host), flip: true };
 
 				g.push({
-					title: "%H: Signal Quality (%s)".format(host), vlabel: "ETX",
+					title: "%%H: Signal Quality (%s)".format(host),
+					vlabel: "ETX",
 					number_format: "%5.2lf", detail: true,
 					data: {
 						types: [ "signal_quality" ],
